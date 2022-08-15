@@ -1,5 +1,5 @@
 # Pipelines, Dockerfiles and so on stuff which differ for Dev and Stage
-.env
+
 default-dev.conf
 Backend/run.sh
 
