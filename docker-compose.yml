@@ -1,0 +1,44 @@
+version: '3.6'
+# Deploys MongoDB with customization scripts and container with Mongo client
+# https://fabianlee.org/2018/05/20/docker-using-docker-compose-to-link-a-mongodb-server-and-client/
+#
+# usage:
+# sudo docker-compose build
+# sudo docker-compose up
+
+services:
+  mongo:
+    image: mongo:4.2.3-bionic
+    container_name: mongo
+    ports:
+      - 27017:27017
+    env_file:
+      - .env
+    volumes:
+      # seeding scripts
+      - ./mongo-entrypoint:/docker-entrypoint-initdb.d
+      # named volumes
+      - ./mongodb:/data/db
+      - mongoconfig:/data/configdb
+    networks:
+      - mongo_net
+
+  backend:
+    build: .
+    restart: always
+    command: sh -c "uvicorn Backend.src.api.main:app --host=0.0.0.0 --port=8000 --reload"
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    networks:
+      - mongo_net
+    depends_on:
+      - mongo
+
+volumes:
+  mongoconfig:
+
+networks:
+  mongo_net:
+    driver: bridge

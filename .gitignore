@@ -1,7 +1,6 @@
 # Pipelines, Dockerfiles and so on stuff which differ for Dev and Stage
 .env
 default-dev.conf
-docker-compose*
 Backend/run.sh
 
 # Byte-compiled / optimized / DLL files
